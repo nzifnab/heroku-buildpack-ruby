@@ -455,17 +455,17 @@ ERROR
       log("add_private_ssh_key") do
         topic("Write private ssh key from env variable")
         FileUtils.mkdir_p(".ssh")
-        run("chmod 744 .ssh")
+        run("chmod 700 .ssh")
         
         File.open(".ssh/id_rsa", "w") do |file|
           file.puts ENV['SSH_KEY']
         end
-        run("chmod 444 .ssh/id_rsa")
+        run("chmod 400 .ssh/id_rsa")
         
         File.open(".ssh/config", "w") do |file|
           file.puts 'StrictHostKeyChecking=no'
         end
-        run("chmod 644 .ssh/config")
+        run("chmod 600 .ssh/config")
       end
     end
   end
