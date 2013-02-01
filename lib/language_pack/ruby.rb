@@ -57,6 +57,7 @@ class LanguagePack::Ruby < LanguagePack::Base
       install_language_pack_gems
       build_bundler
       create_database_yml
+      add_private_ssh_key
       install_binaries
       run_assets_precompile_rake_task
     end
@@ -446,6 +447,26 @@ ERROR
       "-r#{syck_hack_file}"
     else
       ""
+    end
+  end
+  
+  def add_private_ssh_key
+    if(ENV['SSH_KEY'])
+      log("add_private_ssh_key") do
+        topic("Write private ssh key from env variable")
+        FileUtils.mkdir_p(".ssh")
+        run("chmod 744 .ssh")
+        
+        File.open(".ssh/id_rsa", "w") do |file|
+          file.puts ENV['SSH_KEY']
+        end
+        run("chmod 444 .ssh/id_rsa")
+        
+        File.open(".ssh/config", "w") do |file|
+          file.puts 'StrictHostKeyChecking=no'
+        end
+        run("chmod 644 .ssh/config")
+      end
     end
   end
 
